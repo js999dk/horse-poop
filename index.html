@@ -4,10 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>STABLE DUTY 🐴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
   * { margin: 0; padding: 0; box-sizing: border-box; touch-action: none; }
+  button, .btn { touch-action: manipulation; cursor: pointer; }
 
   :root {
     --green: #5a8a3c;
@@ -65,15 +67,15 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 160px;
-    background: linear-gradient(to bottom, var(--green) 0%, var(--dark-green) 30%, var(--dirt) 40%, var(--brown) 100%);
+    height: 200px;
+    background: linear-gradient(to bottom, #6aaa3c 0%, #5a8a3c 15%, #4a7a2c 35%, #3a5a28 55%, var(--dirt) 70%, var(--brown) 100%);
     z-index: 1;
   }
 
   /* Fence */
   .fence {
     position: absolute;
-    bottom: 155px;
+    bottom: 195px;
     width: 100%;
     height: 20px;
     background: repeating-linear-gradient(
@@ -87,7 +89,7 @@
   }
   .fence-top {
     position: absolute;
-    bottom: 168px;
+    bottom: 208px;
     width: 100%;
     height: 6px;
     background: var(--cream);
@@ -95,49 +97,45 @@
   }
   .fence-mid {
     position: absolute;
-    bottom: 158px;
+    bottom: 198px;
     width: 100%;
     height: 6px;
     background: var(--cream);
     z-index: 2;
   }
 
-  /* HUD */
-  #hud {
+  /* Score overlay */
+  #scoreOverlay {
     position: absolute;
-    top: 0;
-    width: 100%;
-    background: var(--dark);
-    padding: 8px 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    top: 12px;
+    left: 12px;
     z-index: 50;
-    border-bottom: 3px solid var(--yellow);
+    pointer-events: none;
+    line-height: 1.8;
   }
-
   #score {
-    color: var(--yellow);
-    font-size: 8px;
-    text-shadow: 2px 2px 0 var(--brown);
-    margin-left: auto;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 33px;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    display: block;
   }
   #level {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 27px;
     color: var(--yellow);
-    font-size: 8px;
-    text-shadow: 2px 2px 0 var(--brown);
-    margin-right: 12px;
+    text-shadow: 2px 2px 0 #000;
+    display: block;
   }
 
   /* Wheelbarrow */
   #wheelbarrow {
     position: absolute;
-    bottom: 100px;
     left: 20px;
     width: 80px;
     height: 70px;
     cursor: grab;
-    z-index: 10;
+    z-index: 4;
     transition: filter 0.2s;
     user-select: none;
   }
@@ -156,11 +154,10 @@
 
   #wbCount {
     position: absolute;
-    bottom: 168px;
     left: 22px;
     color: var(--yellow);
     font-size: 6px;
-    z-index: 11;
+    z-index: 4;
     text-shadow: 1px 1px 0 #000;
     background: var(--dark);
     padding: 2px 4px;
@@ -198,30 +195,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 40px;
     z-index: 60;
     background: rgba(10,10,20,0.92);
     gap: 20px;
-    padding: 20px;
+    padding: 40px 8px 20px;
   }
 
   .screen h1 {
     color: var(--yellow);
-    font-size: 22px;
+    font-size: 35px;
     text-align: center;
     text-shadow: 4px 4px 0 var(--brown);
     line-height: 1.6;
   }
   .screen h2 {
     color: var(--cream);
-    font-size: 11px;
+    font-size: 18px;
     text-align: center;
     line-height: 2;
     color: #aaa;
   }
   .screen p {
     color: var(--cream);
-    font-size: 8px;
+    font-size: 13px;
     text-align: center;
     line-height: 2.2;
   }
@@ -232,7 +230,7 @@
     border: none;
     padding: 12px 24px;
     font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
+    font-size: 16px;
     cursor: pointer;
     border-bottom: 4px solid var(--brown);
     border-right: 4px solid var(--brown);
@@ -252,11 +250,38 @@
     pointer-events: none;
   }
 
+  /* Party horse dance animation */
+  @keyframes dance {
+    0%   { transform: scaleX(-1) rotate(-8deg) translateY(0px); }
+    25%  { transform: scaleX(-1) rotate(8deg) translateY(-6px); }
+    50%  { transform: scaleX(-1) rotate(-8deg) translateY(0px); }
+    75%  { transform: scaleX(-1) rotate(8deg) translateY(-6px); }
+    100% { transform: scaleX(-1) rotate(-8deg) translateY(0px); }
+  }
+  .horse.party {
+    animation: dance 0.5s infinite;
+    filter: drop-shadow(0 0 6px rgba(255,100,255,0.8));
+  }
+
+  /* Goth horse stomp animation */
+  @keyframes stomp {
+    0%   { transform: scaleX(-1) translateY(0px); }
+    20%  { transform: scaleX(-1) translateY(-4px) rotate(-3deg); }
+    40%  { transform: scaleX(-1) translateY(0px) rotate(0deg); }
+    60%  { transform: scaleX(-1) translateY(-3px) rotate(2deg); }
+    80%  { transform: scaleX(-1) translateY(0px) rotate(0deg); }
+    100% { transform: scaleX(-1) translateY(0px); }
+  }
+  .horse.goth {
+    animation: stomp 0.7s infinite;
+    filter: drop-shadow(0 0 8px rgba(180,0,0,0.9));
+  }
+
   /* Message pop */
   .msg-pop {
     position: absolute;
     font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
+    font-size: 33px;
     color: var(--yellow);
     text-shadow: 2px 2px 0 #000;
     z-index: 40;
@@ -270,22 +295,35 @@
 
   #fullMsg {
     position: absolute;
-    bottom: 180px;
-    left: 10px;
-    font-size: 7px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 22px;
     color: var(--red);
     z-index: 20;
-    text-align: center;
-    animation: blink 0.5s infinite;
+    text-align: left;
+    animation: blink 0.6s infinite;
     display: none;
+    line-height: 1.4;
+    text-shadow: 2px 2px 0 #000;
+    white-space: nowrap;
+  }
+  #arrowAnim {
+    color: var(--yellow);
+    display: inline-block;
+    animation: slideRight 0.6s infinite;
+  }
+  @keyframes slideRight {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(10px); }
+    100% { transform: translateX(0); }
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
   /* Poop-o-meter */
   #meter {
     position: absolute;
-    right: 10px;
-    bottom: 105px;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 15;
     display: flex;
     flex-direction: column;
@@ -331,10 +369,10 @@
     <path d="M24,34 Q30,39 36,34" stroke="#c47020" stroke-width="1.5" fill="none" stroke-linecap="round"/>
   </svg>
 
-  <!-- HUD -->
-  <div id="hud">
-    <div id="score">SCORE: 0</div>
-    <div id="level">LVL 1</div>
+  <!-- Score overlay -->
+  <div id="scoreOverlay">
+    <span id="score">SCORE: 0</span>
+    <span id="level">LVL 1</span>
   </div>
 
   <!-- Ground layers -->
@@ -343,7 +381,53 @@
   <div class="fence-mid"></div>
   <div class="fence"></div>
 
-  <!-- Wheelbarrow -->
+  <!-- Grass blades -->
+  <svg viewBox="0 0 390 30" width="390" height="30" style="position:absolute;bottom:196px;left:0;z-index:3;pointer-events:none;">
+    <g fill="#3aaa1a">
+      <rect x="0" y="10" width="4" height="20"/><rect x="2" y="4" width="4" height="26"/><rect x="6" y="12" width="4" height="18"/>
+      <rect x="10" y="8" width="4" height="22"/><rect x="14" y="14" width="4" height="16"/><rect x="16" y="5" width="4" height="25"/>
+      <rect x="20" y="11" width="4" height="19"/><rect x="24" y="6" width="4" height="24"/><rect x="28" y="13" width="4" height="17"/>
+      <rect x="32" y="9" width="4" height="21"/><rect x="36" y="4" width="4" height="26"/><rect x="40" y="12" width="4" height="18"/>
+      <rect x="44" y="7" width="4" height="23"/><rect x="48" y="14" width="4" height="16"/><rect x="50" y="5" width="4" height="25"/>
+      <rect x="54" y="10" width="4" height="20"/><rect x="58" y="6" width="4" height="24"/><rect x="62" y="13" width="4" height="17"/>
+      <rect x="66" y="8" width="4" height="22"/><rect x="70" y="4" width="4" height="26"/><rect x="74" y="11" width="4" height="19"/>
+      <rect x="78" y="9" width="4" height="21"/><rect x="82" y="5" width="4" height="25"/><rect x="86" y="13" width="4" height="17"/>
+      <rect x="90" y="7" width="4" height="23"/><rect x="94" y="11" width="4" height="19"/><rect x="98" y="4" width="4" height="26"/>
+      <rect x="102" y="12" width="4" height="18"/><rect x="106" y="8" width="4" height="22"/><rect x="110" y="6" width="4" height="24"/>
+      <rect x="114" y="14" width="4" height="16"/><rect x="116" y="5" width="4" height="25"/><rect x="120" y="10" width="4" height="20"/>
+      <rect x="124" y="7" width="4" height="23"/><rect x="128" y="13" width="4" height="17"/><rect x="132" y="4" width="4" height="26"/>
+      <rect x="136" y="9" width="4" height="21"/><rect x="140" y="6" width="4" height="24"/><rect x="144" y="12" width="4" height="18"/>
+      <rect x="148" y="5" width="4" height="25"/><rect x="152" y="11" width="4" height="19"/><rect x="156" y="8" width="4" height="22"/>
+      <rect x="160" y="13" width="4" height="17"/><rect x="164" y="4" width="4" height="26"/><rect x="168" y="10" width="4" height="20"/>
+      <rect x="172" y="7" width="4" height="23"/><rect x="176" y="5" width="4" height="25"/><rect x="180" y="12" width="4" height="18"/>
+      <rect x="184" y="9" width="4" height="21"/><rect x="188" y="6" width="4" height="24"/><rect x="192" y="14" width="4" height="16"/>
+      <rect x="196" y="4" width="4" height="26"/><rect x="200" y="11" width="4" height="19"/><rect x="204" y="8" width="4" height="22"/>
+      <rect x="208" y="5" width="4" height="25"/><rect x="212" y="13" width="4" height="17"/><rect x="216" y="7" width="4" height="23"/>
+      <rect x="220" y="10" width="4" height="20"/><rect x="224" y="4" width="4" height="26"/><rect x="228" y="12" width="4" height="18"/>
+      <rect x="232" y="6" width="4" height="24"/><rect x="236" y="9" width="4" height="21"/><rect x="240" y="5" width="4" height="25"/>
+      <rect x="244" y="13" width="4" height="17"/><rect x="248" y="11" width="4" height="19"/><rect x="252" y="4" width="4" height="26"/>
+      <rect x="256" y="8" width="4" height="22"/><rect x="260" y="14" width="4" height="16"/><rect x="262" y="6" width="4" height="24"/>
+      <rect x="266" y="10" width="4" height="20"/><rect x="270" y="5" width="4" height="25"/><rect x="274" y="12" width="4" height="18"/>
+      <rect x="278" y="7" width="4" height="23"/><rect x="282" y="9" width="4" height="21"/><rect x="286" y="4" width="4" height="26"/>
+      <rect x="290" y="13" width="4" height="17"/><rect x="294" y="6" width="4" height="24"/><rect x="298" y="11" width="4" height="19"/>
+      <rect x="302" y="8" width="4" height="22"/><rect x="306" y="5" width="4" height="25"/><rect x="310" y="14" width="4" height="16"/>
+      <rect x="314" y="4" width="4" height="26"/><rect x="318" y="10" width="4" height="20"/><rect x="322" y="7" width="4" height="23"/>
+      <rect x="326" y="12" width="4" height="18"/><rect x="330" y="9" width="4" height="21"/><rect x="334" y="5" width="4" height="25"/>
+      <rect x="338" y="13" width="4" height="17"/><rect x="342" y="6" width="4" height="24"/><rect x="346" y="4" width="4" height="26"/>
+      <rect x="350" y="11" width="4" height="19"/><rect x="354" y="8" width="4" height="22"/><rect x="358" y="14" width="4" height="16"/>
+      <rect x="362" y="5" width="4" height="25"/><rect x="366" y="10" width="4" height="20"/><rect x="370" y="7" width="4" height="23"/>
+      <rect x="374" y="4" width="4" height="26"/><rect x="378" y="12" width="4" height="18"/><rect x="382" y="9" width="4" height="21"/>
+      <rect x="386" y="6" width="4" height="24"/>
+    </g>
+    <g fill="#6aee3a">
+      <rect x="2" y="2" width="2" height="4"/><rect x="16" y="3" width="2" height="4"/><rect x="24" y="4" width="2" height="4"/>
+      <rect x="36" y="2" width="2" height="4"/><rect x="50" y="3" width="2" height="4"/><rect x="70" y="2" width="2" height="4"/>
+      <rect x="98" y="2" width="2" height="4"/><rect x="116" y="3" width="2" height="4"/><rect x="132" y="2" width="2" height="4"/>
+      <rect x="164" y="2" width="2" height="4"/><rect x="196" y="2" width="2" height="4"/><rect x="224" y="2" width="2" height="4"/>
+      <rect x="252" y="2" width="2" height="4"/><rect x="286" y="2" width="2" height="4"/><rect x="314" y="2" width="2" height="4"/>
+      <rect x="346" y="2" width="2" height="4"/><rect x="374" y="2" width="2" height="4"/>
+    </g>
+  </svg>
   <div id="wheelbarrow">
     <svg viewBox="0 0 80 70" width="80" height="70">
       <!-- Tray -->
@@ -366,7 +450,7 @@
     </svg>
   </div>
   <div id="wbCount">0/5</div>
-  <div id="fullMsg">FULL!<br>DRAG OFF!</div>
+  <div id="fullMsg">FULL!<br><span id="arrowAnim">&#9658;&#9658;&#9658;</span></div>
 
   <!-- Poop-o-meter -->
   <div id="meter">
@@ -376,16 +460,17 @@
 
   <!-- Start screen -->
   <div class="screen" id="startScreen">
-    <h1>🐴<br>STABLE<br>DUTY</h1>
-    <p>Horses poop.<br>YOU clean it up.<br><br>Drag 💩 to the<br>wheelbarrow.<br>Empty when full!</p>
-    <button class="btn" onclick="startGame()">START!</button>
+    <h1>🐴 STABLE DUTY</h1>
+    <p>Horses poop.<br>YOU clean it up.<br><br>Drag 💩 to the<br>wheelbarrow.<br>Drag it right ➡️<br>when full!<br><br>💀 5 poops on<br>the ground<br>= GAME OVER!</p>
+    <button class="btn" id="startBtn">START!</button>
   </div>
 
   <!-- Game over screen -->
   <div class="screen" id="gameOverScreen" style="display:none">
-    <h1>💩<br>GAME<br>OVER</h1>
+    <h1>💩💩💩<br>TOO MUCH<br>POOP!</h1>
+    <p>You let 5 poops<br>pile up...<br>the stable is<br>ruined! 😢</p>
     <h2 id="finalScore"></h2>
-    <button class="btn" onclick="startGame()">TRY AGAIN</button>
+    <button class="btn" id="retryBtn">TRY AGAIN</button>
   </div>
 
 </div>
@@ -407,9 +492,9 @@ const PTS_POOP = 10;
 let score = 0;
 let level = 1;
 let wbPile = 0;
-let gameSpeed = 1.0;
+let gameSpeed = 2.0;
 let wbFull = false;
-let wbPos = { x: 290, y: 460 };
+let wbPos = { x: 20, y: 415 };
 let poops = [];
 let horses = [];
 let gameRunning = false;
@@ -450,7 +535,6 @@ function popup(txt, x, y) {
 }
 
 function updateLevel() {
-  level = Math.floor(score / 300) + 1;
   levelEl.textContent = 'LVL ' + level;
 }
 
@@ -460,8 +544,8 @@ function positionWB() {
   wb.style.top = wbPos.y + 'px';
   wbCount.style.left = (wbPos.x + 2) + 'px';
   wbCount.style.top = (wbPos.y - 18) + 'px';
-  fullMsg.style.left = (wbPos.x - 10) + 'px';
-  fullMsg.style.top = (wbPos.y - 36) + 'px';
+  fullMsg.style.left = (wbPos.x) + 'px';
+  fullMsg.style.top = (wbPos.y - 70) + 'px';
 }
 
 function updateWBDisplay() {
@@ -498,24 +582,33 @@ const HORSE_SVGS = [
 
 function createHorse() {
   if (!gameRunning) return;
-  const maxHorses = Math.min(1 + Math.floor(level / 2), 4);
+  const maxHorses = Math.min(level, 4);
   const currentHorses = horses.length;
   if (currentHorses >= maxHorses) return;
 
+  const rng = Math.random();
+  const isParty = level > 1 && rng < 0.12;
+  const isGoth = level > 1 && !isParty && rng < 0.17; // 5% of total (0.12-0.17)
   const fromRight = true;
   const el = document.createElement('div');
-  el.className = 'horse';
+  el.className = isParty ? 'horse party' : isGoth ? 'horse goth' : 'horse';
   const startX = 400;
-  const y = 420 + Math.random() * 60;
+  const y = 420 + Math.random() * 40;
   el.style.left = startX + 'px';
   el.style.top = y + 'px';
-  el.style.transform = 'scaleX(-1)';
+  if (!isParty && !isGoth) el.style.transform = 'scaleX(-1)';
 
-  const colors = HORSE_SVGS[Math.floor(Math.random() * HORSE_SVGS.length)];
-  el.innerHTML = horsesSVG(colors.body, colors.mane);
+  if (isParty) {
+    el.innerHTML = partyHorseSVG();
+  } else if (isGoth) {
+    el.innerHTML = gothHorseSVG();
+  } else {
+    const colors = HORSE_SVGS[Math.floor(Math.random() * HORSE_SVGS.length)];
+    el.innerHTML = horsesSVG(colors.body, colors.mane);
+  }
   container.appendChild(el);
 
-  const horse = { el, x: startX, y, fromRight, pooped: false, speed: (0.5 + Math.random() * 0.5) * gameSpeed };
+  const horse = { el, x: startX, y, fromRight, pooped: false, poopCount: 0, isParty, isGoth, speed: (0.5 + Math.random() * 0.5) * gameSpeed };
   horses.push(horse);
   gameSpeed *= 1.03;
 
@@ -525,14 +618,16 @@ function createHorse() {
     horse.x += fromRight ? -horse.speed : horse.speed;
     horse.el.style.left = horse.x + 'px';
 
-    // Poop when roughly in middle
-    if (!horse.pooped && horse.x > 60 && horse.x < 320) {
-      if (Math.random() < 0.015) {
+    // Poop only when tail is far enough left that poop stays fully on screen
+    const maxDrops = 1 + level; // starts at 2, +1 per level
+    if (!horse.pooped && horse.poopCount < maxDrops && horse.x > 60 && horse.x < 294) {
+      if (Math.random() < 0.04) {
         horse.pooped = true;
-        dropPoop(horse.x + 30, horse.y + 55);
+        horse.poopCount++;
+        dropPoop(horse.x + 78, horse.y + 55, horse.isParty, horse.isGoth);
         setTimeout(() => {
           horse.pooped = false;
-        }, 3000 + Math.random() * 2000);
+        }, 1500 + Math.random() * 1500);
       }
     }
 
@@ -581,21 +676,207 @@ function horsesSVG(body, mane) {
   </svg>`;
 }
 
-// ---- Poops ----
-function dropPoop(x, y) {
-  if (poops.length >= maxPoopsOnField) return;
+function partyHorseSVG() {
+  return `<svg viewBox="0 0 90 80" width="90" height="80">
+    <!-- Party sparkles -->
+    <text x="5" y="12" font-size="10">✨</text>
+    <text x="70" y="14" font-size="8">⭐</text>
+    <!-- Party hat -->
+    <polygon points="68,2 76,2 72,-10" fill="#ff44cc" stroke="#aa00aa" stroke-width="1"/>
+    <polygon points="68,2 76,2 72,-10" fill="url(#hatch)"/>
+    <rect x="67" y="1" width="10" height="3" fill="#ffdd00" rx="1"/>
+    <!-- Body (upright, on 2 legs) -->
+    <ellipse cx="44" cy="42" rx="22" ry="16" fill="#cc66ff"/>
+    <!-- Neck -->
+    <rect x="56" y="20" width="14" height="24" fill="#cc66ff" rx="6"/>
+    <!-- Head -->
+    <ellipse cx="70" cy="17" rx="12" ry="10" fill="#cc66ff"/>
+    <!-- Snout -->
+    <ellipse cx="79" cy="21" rx="6" ry="5" fill="#ee99ff"/>
+    <circle cx="77" cy="20" r="1.5" fill="#222"/>
+    <circle cx="81" cy="20" r="1.5" fill="#222"/>
+    <!-- Big smile -->
+    <path d="M74,24 Q79,28 84,24" stroke="#aa00aa" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- Eye with star -->
+    <circle cx="67" cy="13" r="3" fill="#fff"/>
+    <circle cx="67" cy="13" r="1.5" fill="#222"/>
+    <circle cx="68" cy="12" r="0.8" fill="#fff"/>
+    <!-- Ear -->
+    <polygon points="64,5 68,5 66,12" fill="#ee99ff"/>
+    <!-- Rainbow mane -->
+    <path d="M58,18 Q50,6 64,10" stroke="#ff0000" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M58,22 Q48,10 62,14" stroke="#ff8800" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M57,26 Q46,14 60,18" stroke="#ffff00" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M56,30 Q44,18 58,22" stroke="#00cc00" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M56,34 Q43,22 57,26" stroke="#0088ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M55,38 Q42,26 56,30" stroke="#cc00ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- Two back legs raised/dancing -->
+    <rect x="34" y="54" width="8" height="18" fill="#cc66ff" rx="2" transform="rotate(-20 38 54)"/>
+    <rect x="46" y="54" width="8" height="18" fill="#cc66ff" rx="2" transform="rotate(15 50 54)"/>
+    <!-- Hooves -->
+    <rect x="28" y="66" width="10" height="5" fill="#7700aa" rx="1" transform="rotate(-20 33 68)"/>
+    <rect x="46" y="68" width="10" height="5" fill="#7700aa" rx="1" transform="rotate(15 51 70)"/>
+    <!-- Front legs up in the air -->
+    <line x1="38" y1="50" x2="22" y2="36" stroke="#cc66ff" stroke-width="7" stroke-linecap="round"/>
+    <line x1="50" y1="50" x2="66" y2="36" stroke="#cc66ff" stroke-width="7" stroke-linecap="round"/>
+    <!-- Rainbow tail -->
+    <path d="M24,40 Q8,28 12,44" stroke="#ff0000" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M24,44 Q6,32 10,48" stroke="#ff8800" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M24,48 Q5,36 9,52" stroke="#ffff00" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function rainbowPoopSVG() {
+  return `<svg viewBox="0 0 42 34" width="42" height="34">
+    <!-- Glow base -->
+    <ellipse cx="21" cy="26" rx="16" ry="7" fill="rgba(200,0,255,0.2)"/>
+    <!-- Rainbow layers -->
+    <ellipse cx="21" cy="26" rx="14" ry="6" fill="#ff0066"/>
+    <ellipse cx="21" cy="22" rx="11" ry="6" fill="#ff6600"/>
+    <ellipse cx="21" cy="17" rx="8" ry="5" fill="#ffdd00"/>
+    <ellipse cx="21" cy="12" rx="5.5" ry="4" fill="#00cc44"/>
+    <ellipse cx="21" cy="8"  rx="3.5" ry="3" fill="#0088ff"/>
+    <ellipse cx="21" cy="5"  rx="2"   ry="2" fill="#cc00ff"/>
+    <!-- Shine -->
+    <ellipse cx="17" cy="7" rx="1.5" ry="1" fill="rgba(255,255,255,0.5)" transform="rotate(-20 17 7)"/>
+    <!-- Face -->
+    <circle cx="19" cy="14" r="1.3" fill="#fff"/>
+    <circle cx="23" cy="14" r="1.3" fill="#fff"/>
+    <circle cx="19" cy="14" r="0.7" fill="#333"/>
+    <circle cx="23" cy="14" r="0.7" fill="#333"/>
+    <path d="M18,17 Q21,20 24,17" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <!-- Stars -->
+    <text x="28" y="12" font-size="8">⭐</text>
+    <text x="2" y="10" font-size="7">✨</text>
+  </svg>`;
+}
+function gothHorseSVG() {
+  return `<svg viewBox="0 0 100 75" width="100" height="75">
+    <!-- Dark fog/smoke trails -->
+    <ellipse cx="85" cy="55" rx="8" ry="5" fill="rgba(60,0,80,0.4)"/>
+    <ellipse cx="90" cy="48" rx="5" ry="3" fill="rgba(60,0,80,0.3)"/>
+    <!-- Legs (heavy, stomping) -->
+    <rect x="18" y="46" width="9" height="24" fill="#111" rx="2"/>
+    <rect x="32" y="46" width="9" height="24" fill="#111" rx="2"/>
+    <rect x="50" y="46" width="9" height="24" fill="#111" rx="2"/>
+    <rect x="64" y="46" width="9" height="24" fill="#111" rx="2"/>
+    <!-- Spiked hooves -->
+    <polygon points="17,70 27,70 24,76 20,76" fill="#330000"/>
+    <polygon points="31,70 41,70 38,76 34,76" fill="#330000"/>
+    <polygon points="49,70 59,70 56,76 52,76" fill="#330000"/>
+    <polygon points="63,70 73,70 70,76 66,76" fill="#330000"/>
+    <!-- Spikes on hooves -->
+    <polygon points="19,70 21,64 23,70" fill="#880000"/>
+    <polygon points="33,70 35,64 37,70" fill="#880000"/>
+    <polygon points="51,70 53,64 55,70" fill="#880000"/>
+    <polygon points="65,70 67,64 69,70" fill="#880000"/>
+    <!-- Body -->
+    <ellipse cx="44" cy="38" rx="32" ry="18" fill="#1a1a1a"/>
+    <!-- Spiked collar/armor -->
+    <rect x="14" y="30" width="60" height="6" fill="#330000" rx="2"/>
+    <polygon points="18,30 21,24 24,30" fill="#880000"/>
+    <polygon points="26,30 29,24 32,30" fill="#880000"/>
+    <polygon points="34,30 37,24 40,30" fill="#880000"/>
+    <polygon points="42,30 45,24 48,30" fill="#880000"/>
+    <polygon points="50,30 53,24 56,30" fill="#880000"/>
+    <polygon points="58,30 61,24 64,30" fill="#880000"/>
+    <!-- Neck -->
+    <rect x="60" y="14" width="16" height="28" fill="#1a1a1a" rx="5"/>
+    <!-- Head -->
+    <ellipse cx="74" cy="13" rx="13" ry="11" fill="#1a1a1a"/>
+    <!-- Snout -->
+    <ellipse cx="84" cy="17" rx="6" ry="5" fill="#111"/>
+    <!-- Nostril flames -->
+    <ellipse cx="82" cy="16" rx="1.5" ry="2" fill="#cc0000" opacity="0.9"/>
+    <ellipse cx="86" cy="16" rx="1.5" ry="2" fill="#cc0000" opacity="0.9"/>
+    <!-- Glowing red eyes -->
+    <circle cx="70" cy="10" r="3.5" fill="#cc0000"/>
+    <circle cx="70" cy="10" r="2" fill="#ff4400"/>
+    <circle cx="71" cy="9" r="0.8" fill="#ffaa00"/>
+    <!-- Death metal mane (black with red tips) -->
+    <path d="M62,16 Q52,2 66,7" stroke="#1a1a1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M62,20 Q50,5 64,11" stroke="#330000" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M61,24 Q49,8 63,15" stroke="#550000" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M62,16 Q55,4 67,8" stroke="#880000" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <!-- Horns -->
+    <polygon points="67,4 70,4 68,-4" fill="#330000"/>
+    <polygon points="73,3 76,3 74,-5" fill="#330000"/>
+    <!-- Spiked tail -->
+    <path d="M14,32 Q-2,18 2,36 Q0,50 8,42" fill="#1a1a1a" stroke="#880000" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="2,36 -2,42 4,40" fill="#880000"/>
+    <!-- Skull tattoo on body -->
+    <ellipse cx="38" cy="40" rx="5" ry="5" fill="#333"/>
+    <circle cx="36" cy="38" r="1.2" fill="#000"/>
+    <circle cx="40" cy="38" r="1.2" fill="#000"/>
+    <path d="M35,42 Q38,44 41,42" stroke="#000" stroke-width="1" fill="none"/>
+    <rect x="36" y="42" width="1.5" height="2" fill="#000"/>
+    <rect x="39" y="42" width="1.5" height="2" fill="#000"/>
+    <!-- Lightning bolt mark -->
+    <polygon points="52,35 55,39 53,39 56,44 50,39 53,39 50,35" fill="#ffcc00"/>
+  </svg>`;
+}
+
+function skullPoopSVG() {
+  return `<svg viewBox="0 0 38 32" width="38" height="32">
+    <!-- Dark base -->
+    <ellipse cx="19" cy="27" rx="15" ry="6" fill="#1a0000"/>
+    <ellipse cx="19" cy="22" rx="12" ry="6" fill="#220000"/>
+    <ellipse cx="19" cy="17" rx="9" ry="6" fill="#1a0000"/>
+    <ellipse cx="19" cy="12" rx="6" ry="5" fill="#220000"/>
+    <ellipse cx="19" cy="8"  rx="4" ry="3.5" fill="#1a0000"/>
+    <!-- Red drips -->
+    <ellipse cx="10" cy="26" rx="2" ry="3" fill="#880000" opacity="0.7"/>
+    <ellipse cx="28" cy="25" rx="1.5" ry="2.5" fill="#880000" opacity="0.7"/>
+    <ellipse cx="19" cy="29" rx="1.5" ry="2" fill="#aa0000" opacity="0.8"/>
+    <!-- Skull face on middle tier -->
+    <ellipse cx="19" cy="17" rx="7" ry="6" fill="#2a2a2a"/>
+    <!-- Skull eyes -->
+    <ellipse cx="16" cy="15" rx="2" ry="2.5" fill="#000"/>
+    <ellipse cx="22" cy="15" rx="2" ry="2.5" fill="#000"/>
+    <circle cx="16" cy="15" r="0.8" fill="#cc0000"/>
+    <circle cx="22" cy="15" r="0.8" fill="#cc0000"/>
+    <!-- Skull nose -->
+    <path d="M18,18 L19,20 L20,18" fill="#000"/>
+    <!-- Skull teeth -->
+    <rect x="14" y="20" width="2" height="2.5" fill="#000" rx="0.3"/>
+    <rect x="17" y="20" width="2" height="2.5" fill="#000" rx="0.3"/>
+    <rect x="20" y="20" width="2" height="2.5" fill="#000" rx="0.3"/>
+    <!-- Glow -->
+    <ellipse cx="15" cy="13" rx="1" ry="0.8" fill="rgba(255,0,0,0.3)" transform="rotate(-20 15 13)"/>
+    <!-- Mini skulls on bottom -->
+    <text x="5" y="30" font-size="7">💀</text>
+    <text x="25" y="30" font-size="7">💀</text>
+  </svg>`;
+}
+
+function dropPoop(x, y, isRainbow = false, isSkull = false) {
+  if (poops.length >= 5) return;
   const el = document.createElement('div');
   el.className = 'poop';
   el.style.left = (x - 18) + 'px';
   el.style.top = (y - 14) + 'px';
-  el.innerHTML = poopSVG();
+  if (isSkull) {
+    el.innerHTML = skullPoopSVG();
+    el.style.filter = 'drop-shadow(0 0 6px rgba(180,0,0,0.9))';
+  } else if (isRainbow) {
+    el.innerHTML = rainbowPoopSVG();
+    el.style.filter = 'drop-shadow(0 0 5px rgba(255,100,255,0.9))';
+  } else {
+    el.innerHTML = poopSVG();
+  }
   container.appendChild(el);
   // Drop animation
   el.style.transform = 'scale(0)';
   setTimeout(() => { el.style.transform = 'scale(1)'; el.style.transition = 'transform 0.2s'; }, 10);
 
-  const poop = { el, x: x - 18, y: y - 14, id: Date.now() + Math.random() };
+  const pts = isSkull ? 150 : isRainbow ? 250 : PTS_POOP;
+  const poop = { el, x: x - 18, y: y - 14, id: Date.now() + Math.random(), points: pts };
   poops.push(poop);
+
+  // Check game over condition
+  if (poops.length >= 5) {
+    setTimeout(triggerGameOver, 300);
+  }
 
   // Make draggable
   el.addEventListener('mousedown', e => startDragPoop(e, poop));
@@ -678,7 +959,7 @@ function onEndGlobal(e) {
         poops = poops.filter(p => p !== poop);
         wbPile++;
         updateWBDisplay();
-        addScore(PTS_POOP, wbPos.x + 40, wbPos.y);
+        addScore(poop.points, wbPos.x + 40, wbPos.y);
       } else {
         // Bounce back - WB full
         popup('FULL!', wbPos.x + 20, wbPos.y - 20);
@@ -689,12 +970,12 @@ function onEndGlobal(e) {
   if (wbDragging) {
     wb.classList.remove('dragging');
     wbDragging = false;
-    // Check if dragged off screen
-    if (wbFull && (wbPos.x < -40 || wbPos.x > 420 || wbPos.y > 720 || wbPos.y < -40)) {
+    // Check if dragged off the RIGHT edge only
+    if (wbFull && wbPos.x > 290) {
       emptyWB();
     } else if (wbFull) {
       // Snap back
-      wbPos = { x: 20, y: 460 };
+      wbPos = { x: 20, y: 415 };
       positionWB();
     }
   }
@@ -702,4 +983,121 @@ function onEndGlobal(e) {
 
 // ---- WB Drag ----
 wb.addEventListener('mousedown', startDragWB);
-wb.addEventListener('touchstart', startDragWB, { passive:
+wb.addEventListener('touchstart', startDragWB, { passive: false });
+
+function startDragWB(e) {
+  if (!gameRunning) return;
+  e.preventDefault();
+  e.stopPropagation();
+  wbDragging = true;
+  wb.classList.add('dragging');
+  const pos = getClientPos(e);
+  const cr = container.getBoundingClientRect();
+  wbDragOffset.x = pos.x - cr.left - wbPos.x;
+  wbDragOffset.y = pos.y - cr.top - wbPos.y;
+}
+
+function emptyWB() {
+  const wasFullBonus = wbPile >= WB_CAPACITY;
+  gameSpeed *= 1.05;
+  level++;
+  levelEl.textContent = 'LVL ' + level;
+  if (wasFullBonus) {
+    addScore(BONUS_FULL, 120, 320);
+    popup('BONUS!', 120, 320);
+    setTimeout(() => popup('LVL ' + level + '!', 120, 320), 700);
+  } else {
+    popup('LVL ' + level + '!', 120, 320);
+  }
+  wbPile = 0;
+  wbFull = false;
+  wbPos = { x: 20, y: 415 };
+  positionWB();
+  updateWBDisplay();
+}
+
+// ---- Game loop ----
+function triggerGameOver() {
+  if (!gameRunning) return;
+  gameRunning = false;
+  horses.forEach(h => clearInterval(h.interval));
+  timers.forEach(clearInterval);
+  timers = [];
+  const go = document.getElementById('gameOverScreen');
+  document.getElementById('finalScore').textContent = 'SCORE: ' + score;
+  go.style.display = 'flex';
+}
+
+function startGame() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOverScreen').style.display = 'none';
+  // Reset
+  score = 0; level = 1; wbPile = 0; wbFull = false; gameSpeed = 2.0;
+  poops.forEach(p => p.el.remove()); poops = [];
+  horses.forEach(h => { clearInterval(h.interval); h.el.remove(); }); horses = [];
+  timers.forEach(clearInterval); timers = [];
+  scoreEl.textContent = 'SCORE: 0';
+  levelEl.textContent = 'LVL 1';
+  updateWBDisplay();
+  wbPos = { x: 20, y: 415 };
+  positionWB();
+  gameRunning = true;
+
+  // Spawn horses
+  spawnLoop();
+  // Clouds
+  spawnClouds();
+}
+
+function spawnLoop() {
+  if (!gameRunning) return;
+  createHorse();
+  const delay = Math.max(600, (4000 - level * 200) / gameSpeed);
+  const t = setTimeout(spawnLoop, delay);
+  timers.push(t);
+}
+
+// ---- Clouds ----
+function spawnClouds() {
+  for (let i = 0; i < 3; i++) {
+    createCloud(Math.random() * 300 + 50, Math.random() * 80 + 45);
+  }
+}
+
+function createCloud(x, y) {
+  const el = document.createElement('div');
+  el.className = 'cloud';
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  const w = 60 + Math.random() * 60;
+  el.innerHTML = `<svg viewBox="0 0 ${w} 30" width="${w}" height="30" opacity="0.85">
+    <ellipse cx="${w/2}" cy="20" rx="${w/2-5}" ry="10" fill="white"/>
+    <ellipse cx="${w/2-10}" cy="14" rx="${w/4}" ry="10" fill="white"/>
+    <ellipse cx="${w/2+8}" cy="12" rx="${w/4-2}" ry="11" fill="white"/>
+  </svg>`;
+  container.appendChild(el);
+  const speed = 0.2 + Math.random() * 0.3;
+  const ci = setInterval(() => {
+    x += speed;
+    if (x > 420) x = -100;
+    el.style.left = x + 'px';
+  }, 50);
+  timers.push(ci);
+}
+
+// init position
+positionWB();
+updateWBDisplay();
+
+// set initial WB position to left
+wbPos = { x: 20, y: 415 };
+positionWB();
+
+// Wire up buttons safely (works on GitHub Pages)
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('startBtn').addEventListener('touchend', function(e) { e.preventDefault(); startGame(); });
+document.getElementById('retryBtn').addEventListener('click', startGame);
+document.getElementById('retryBtn').addEventListener('touchend', function(e) { e.preventDefault(); startGame(); });
+</script>
+</body>
+</html>
