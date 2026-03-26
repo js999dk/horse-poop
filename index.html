@@ -608,7 +608,7 @@ function createHorse() {
   }
   container.appendChild(el);
 
-  const horse = { el, x: startX, y, fromRight, pooped: false, poopCount: 0, isParty, isGoth, speed: (0.5 + Math.random() * 0.5) * gameSpeed };
+  const horse = { el, x: startX, y, fromRight, pooped: false, poopCount: 0, lastPoopX: null, isParty, isGoth, speed: (0.5 + Math.random() * 0.5) * gameSpeed };
   horses.push(horse);
   gameSpeed *= 1.01;
 
@@ -620,14 +620,15 @@ function createHorse() {
 
     // Poop only when tail is far enough left that poop stays fully on screen
     const maxDrops = 2 + Math.floor((level - 1) / 2); // starts at 2, +1 every 2 levels
-    if (!horse.pooped && horse.poopCount < maxDrops && horse.x > 60 && horse.x < 294) {
+    const movedEnough = horse.lastPoopX === null || Math.abs(horse.x - horse.lastPoopX) >= 50;
+    if (!horse.pooped && movedEnough && horse.poopCount < maxDrops && horse.x > 60 && horse.x < 294) {
       if (Math.random() < 0.04) {
         horse.pooped = true;
         horse.poopCount++;
+        horse.lastPoopX = horse.x;
         dropPoop(horse.x + 78, horse.y + 55, horse.isParty, horse.isGoth);
-        setTimeout(() => {
-          horse.pooped = false;
-        }, 1500 + Math.random() * 1500);
+        // Brief lock to prevent double-fire on same tick, then release immediately
+        setTimeout(() => { horse.pooped = false; }, 100);
       }
     }
 
